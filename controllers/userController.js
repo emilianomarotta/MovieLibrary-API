@@ -1,12 +1,13 @@
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 const usersFilePath = path.join(__dirname, '../data/users.txt');
 if (!fs.existsSync(usersFilePath)) {
   fs.writeFileSync(usersFilePath, '', 'utf-8');
 }
 
-const registerUser = (req, res) => {
+async function registerUser (req, res) {
   const { email, firstName, lastName, password } = req.body;
   const requiredFields = ['email', 'firstName', 'lastName', 'password'];
 
@@ -24,8 +25,9 @@ const registerUser = (req, res) => {
   }
 
   const newUser = { email, firstName, lastName, password };
+  await encryptPassword(newUser);
   const addedUser = addUser(newUser, usersFilePath);
-  res.status(201).json({ message: 'Usuario registrado con éxito.', user: addedUser });
+  res.status(201).json({ message: 'Usuario registrado con éxito.', user: addedUser.email });
 };
 
 function getUsers() {
@@ -48,6 +50,12 @@ function isValidEmail(email) {
 
 function userAlreadyExist(users, email) {
   return users.some(user => user.email.toLowerCase() === email.toLowerCase());
+}
+
+async function encryptPassword(user) {
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+  user.password = hashedPassword;
 }
 
 function addUser(newUser, usersFilePath) {
