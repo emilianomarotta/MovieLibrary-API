@@ -35,7 +35,7 @@ function getUsers() {
 }
 
 function userAlreadyExist(users, email) {
-  return users.some(user => user.email === email);
+  return users.some(user => user.email.toLowerCase() === email.toLowerCase());
 }
 
 module.exports = {
