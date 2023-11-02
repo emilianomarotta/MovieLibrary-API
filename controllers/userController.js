@@ -7,7 +7,7 @@ if (!fs.existsSync(usersFilePath)) {
   fs.writeFileSync(usersFilePath, '', 'utf-8');
 }
 
-async function registerUser (req, res) {
+async function registerUser(req, res) {
   const { email, firstName, lastName, password } = req.body;
   const requiredFields = ['email', 'firstName', 'lastName', 'password'];
 
@@ -17,6 +17,12 @@ async function registerUser (req, res) {
 
   if (!isValidEmail(email)) {
     return res.status(400).json({ message: 'Ingrese mail válido.' });
+  }
+
+  if (!isValidPassword(password)) {
+    const message = 'La constraseña debe tener un mínimo de 8 caracteres.'
+      + ' Debe contener al menos 1 número, 1 mayúscula y 1 caracter especial'
+    return res.status(400).json({ message });
   }
 
   let users = getUsers();
@@ -41,6 +47,11 @@ function getUsers() {
 
 function emptyFields(data, fields) {
   return fields.some(field => !data[field]);
+}
+
+function isValidPassword(password) {
+  const passwordRegex = /^^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/i;
+  return passwordRegex.test(password) && password.length < 9;
 }
 
 function isValidEmail(email) {
