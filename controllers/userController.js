@@ -50,8 +50,8 @@ function emptyFields(data, fields) {
 }
 
 function isValidPassword(password) {
-  const passwordRegex = /^^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/i;
-  return passwordRegex.test(password) && password.length < 9;
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/i;
+  return passwordRegex.test(password) && password.length > 7;
 }
 
 function isValidEmail(email) {
