@@ -12,16 +12,25 @@ const secretKey = 'mySecretKey';
 
 const authenticateUser = (req, res) => {
     const { email, password } = req.body;
-    const users = JSON.parse(fs.readFileSync(usersFilePath, 'utf-8'));
-    const user = getUser(users, email);
-    if (!user) {
-        return res.status(401).json({ message: 'Usuario no encontrado.' });
+    let users = [];
+    try {
+        const fileContent = fs.readFileSync(usersFilePath, 'utf-8');
+        if (fileContent) {
+            users = JSON.parse(fileContent);
+        }
+        const user = getUser(users, email);
+        if (!user) {
+            return res.status(401).json({ message: 'Usuario no encontrado.' });
+        }
+        if (!checkPassword(password, user.password)) {
+            return res.status(401).json({ message: 'Contraseña incorrecta.' });
+        }
+        const token = generateToken(user);
+        res.json({ message: 'Autenticación exitosa.', token });
+    } catch (error) {
+        console.error('Error al leer el archivo de usuarios:', error);
+        res.status(500).json({ message: 'Error en el servidor.' });
     }
-    if (!checkPassword(password, user.password)) {
-        return res.status(401).json({ message: 'Contraseña incorrecta.' });
-    }
-    const token = generateToken(user);
-    res.json({ message: 'Autenticación exitosa.', token });
 };
 
 const logout = (req, res) => {
