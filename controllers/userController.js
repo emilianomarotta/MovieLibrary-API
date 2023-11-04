@@ -3,9 +3,7 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 
 const usersFilePath = path.join(__dirname, '../data/users.txt');
-if (!fs.existsSync(usersFilePath)) {
-  fs.writeFileSync(usersFilePath, '', 'utf-8');
-}
+createFolderAndFiles(usersFilePath);
 
 async function registerUser(req, res) {
   const { email, firstName, lastName, password } = req.body;
@@ -74,6 +72,18 @@ function addUser(newUser, usersFilePath) {
   users.push(newUser);
   fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
   return newUser;
+}
+
+function createFolderAndFiles(filePath) {
+  const folderPath = path.dirname(filePath);
+
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath, { recursive: true });
+  }
+
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, '', 'utf-8');
+  }
 }
 
 module.exports = {
