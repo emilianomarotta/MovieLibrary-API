@@ -4,6 +4,7 @@ Este proyecto es una API de películas que brinda soporte para las siguientes ac
 
 - Registrar usuario
 - Autenticar usuario
+- Invalidar token
 - Obtener películas (con opción de búsqueda por una keyword)
 - Agregar película a favoritos
 - Obtener películas favoritas
