@@ -8,5 +8,7 @@ const favoriteController = require('../controllers/favoritesController');
 router.post('/register', userController.registerUser);
 router.post('/login', authController.authenticateUser);
 router.post('/addFavorite', authMiddleware, favoriteController.addFavoriteMovie);
+router.get('/getFavorites', authMiddleware, favoriteController.getFavoriteMovies);
+
 
 module.exports = router;

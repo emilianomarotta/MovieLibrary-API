@@ -21,12 +21,25 @@ const addFavoriteMovie = (req, res) => {
     return res.status(400).json({ message: 'La película ya está en la lista de favoritos.' });
   }
 
-  const movieToAdd = { movieId, title, releaseDate, originalLanguage, addedAT: new Date() };
+  const movieToAdd = { movieId, title, releaseDate, originalLanguage, addedAt: new Date() };
   userFavorites.favorites.push(movieToAdd);
   updateUsers(users, userId, userFavorites);
   saveUsersToFile(users);
   res.status(201).json({ message: 'Película agregada a favoritos con éxito.' });
 };
+
+const getFavoriteMovies = (req, res) => {
+  const user = req.user;
+  const userId = user.userId;
+  let users = getUsers();
+  let userFavorites = users[userId] && users[userId].favorites || [];
+  userFavorites.forEach(movie => {
+    movie.suggestionForTodayScore = Math.floor(Math.random() * 100);
+  });
+  userFavorites.sort((a, b) => b.suggestionForTodayScore - a.suggestionForTodayScore);
+
+  res.json(userFavorites);
+}
 
 function createFolderAndFiles(filePath) {
   const folderPath = path.dirname(filePath);
@@ -68,5 +81,5 @@ function saveUsersToFile(users) {
 }
 
 module.exports = {
-  addFavoriteMovie,
+  addFavoriteMovie, getFavoriteMovies,
 };
