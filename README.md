@@ -110,6 +110,13 @@ GET /api/users/getFavorites
 ```
 
 ### Nota Importante
+
+_En esta versión del proyecto se ha incluido un archivo `.env` que contiene las claves y configuraciones necesarias para el proyecto._ 
+
+_Este archivo se utiliza para almacenar información confidencial, como claves de API._
+
+_Este proyecto es una implementación de prueba y aprendizaje. El uso de un archivo `.env` para almacenar claves es una práctica común en proyectos reales para mantener la seguridad de los datos confidenciales. En un entorno de producción, nunca debes incluir claves sensibles directamente en el código fuente._
+ 
 Para los siguientes endpoints, es necesario incluir el token de autenticación en los encabezados de las solicitudes:
 
 - **Logout:** Para cerrar la sesión, asegúrate de incluir el token en el encabezado.
@@ -128,7 +135,7 @@ Authorization: tu_token_aqui
 
 ---
 ### Agradecimientos
-Agradecemos a The Movie Database por proporcionar datos de películas.
+Agradezco a The Movie Database por proporcionar datos de películas.
 
 
 ### Contacto
