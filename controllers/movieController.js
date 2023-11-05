@@ -1,9 +1,11 @@
+require('dotenv').config();
+
 const axios = require('axios');
 
 const getMovies = async (req, res) => {
     try {
         const keyword = req.query.keyword || '';
-        const apiKey = 'd7faa0585c25398b4ba7aa5e481c6216';
+        const apiKey = process.env.API_KEY;
         let response;
         if (keyword) {
             response = await getMoviesByKeyword(apiKey, keyword);

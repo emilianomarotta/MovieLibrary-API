@@ -1,12 +1,11 @@
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
-
+const secretKey = process.env.SECRET_KEY;
 const usersFilePath = path.join(__dirname, '../data/users.txt');
 const invalidTokensFilePath = path.join(__dirname, '../data/invalidTokens.txt');
-
-const secretKey = 'mySecretKey';
 
 const authenticateUser = (req, res) => {
     const { email, password } = req.body;

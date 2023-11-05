@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-
 const usersFilePath = path.join(__dirname, '../data/users.txt');
 const favoritesFilePath = path.join(__dirname, '../data/favorites.txt');
 
