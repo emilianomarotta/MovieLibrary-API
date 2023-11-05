@@ -75,4 +75,11 @@ function addUser(newUser, usersFilePath) {
 
 module.exports = {
   registerUser,
+  getUsers,
+  emptyFields,
+  isValidPassword,
+  isValidEmail,
+  userAlreadyExist,
+  encryptPassword,
+  addUser,
 };
