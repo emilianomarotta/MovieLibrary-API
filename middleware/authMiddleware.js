@@ -11,7 +11,6 @@ const authMiddleware = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: 'No se proporcionó un token de autenticación.' });
   }
-
   const invalidTokens = getInvalidTokens();
   if (invalidTokens.includes(token)) {
     return res.status(401).json({ message: 'Token ya no es válido.' });
@@ -27,8 +26,12 @@ const authMiddleware = (req, res, next) => {
 };
 
 function getInvalidTokens() {
-  const fileContent = fs.readFileSync(invalidTokensFilePath, 'utf-8');
-  return JSON.parse(fileContent);
+  try {
+    const fileContent = fs.readFileSync(invalidTokensFilePath, 'utf-8');
+    return JSON.parse(fileContent);
+  } catch (error) {
+    return [];
+  }
 }
 
 module.exports = authMiddleware;

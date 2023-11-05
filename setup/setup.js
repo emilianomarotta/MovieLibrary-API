@@ -22,7 +22,7 @@ function createFolder(folderPath) {
     }
 }
 
-function createFiles(filePath) {
+function createFiles(filePath, separator) {
     if (!fs.existsSync(filePath)) {
         fs.writeFileSync(filePath, '', 'utf-8');
     }
