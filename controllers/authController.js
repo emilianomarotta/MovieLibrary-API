@@ -5,9 +5,7 @@ const path = require('path');
 
 const usersFilePath = path.join(__dirname, '../data/users.txt');
 const invalidTokensFilePath = path.join(__dirname, '../data/invalidTokens.txt');
-if (!fs.existsSync(invalidTokensFilePath)) {
-    fs.writeFileSync(invalidTokensFilePath, '[]', 'utf-8');
-}
+
 const secretKey = 'mySecretKey';
 
 const authenticateUser = (req, res) => {
@@ -41,7 +39,6 @@ const logout = (req, res) => {
     }
 
     const invalidTokens = getInvalidTokens();
-
     if (invalidTokens.includes(token)) {
         return res.status(401).json({ message: 'Token ya se encuentra en la lista de tokens inválidos.' });
     }
@@ -50,7 +47,6 @@ const logout = (req, res) => {
 
     res.status(200).json({ message: 'Token invalidado con éxito.' });
 };
-
 
 function getUser(users, email) {
     return users.find(user => user.email.toLowerCase() === email.toLowerCase());

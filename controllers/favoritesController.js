@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 const favoritesFilePath = path.join(__dirname, '../data/favorites.txt');
-createFolderAndFiles(favoritesFilePath);
 
 const addFavoriteMovie = (req, res) => {
   const user = req.user;
@@ -39,16 +38,6 @@ const getFavoriteMovies = (req, res) => {
   userFavorites.sort((a, b) => b.suggestionForTodayScore - a.suggestionForTodayScore);
 
   res.json(userFavorites);
-}
-
-function createFolderAndFiles(filePath) {
-  const folderPath = path.dirname(filePath);
-  if (!fs.existsSync(folderPath)) {
-    fs.mkdirSync(folderPath, { recursive: true });
-  }
-  if (!fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, '', 'utf-8');
-  }
 }
 
 function emptyFields(data, fields) {
