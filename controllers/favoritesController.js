@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const usersFilePath = path.join(__dirname, '../data/users.txt');
 const favoritesFilePath = path.join(__dirname, '../data/favorites.txt');
 
 const addFavoriteMovie = (req, res) => {
@@ -11,6 +12,9 @@ const addFavoriteMovie = (req, res) => {
 
   if (emptyFields(req.body, requiredFields)) {
     return res.status(400).json({ message: 'Faltan datos obligatorios.' });
+  }
+  if (!userExistsInFile(userId)) {
+    return res.status(400).json({ message: 'Usuario no encontrado.' });
   }
 
   let users = getUsers();
@@ -44,6 +48,18 @@ function emptyFields(data, fields) {
   return fields.some(field => !data[field]);
 }
 
+function userExistsInFile(userId) {
+  try {
+    const usersData = fs.readFileSync(usersFilePath, 'utf-8');
+    const users = JSON.parse(usersData);
+    if (users.find(user => user.email === userId)) {
+      return true;
+    }
+  } catch (error) {
+  }
+  return false;
+}
+
 function getUsers() {
   try {
     const usersData = fs.readFileSync(favoritesFilePath, 'utf-8');
@@ -52,6 +68,7 @@ function getUsers() {
     return {};
   }
 }
+
 
 function getUserFavorites(users, userId) {
   return users[userId] || { favorites: [] };
