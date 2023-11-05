@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const usersFilePath = path.join(__dirname, '../data/users.txt');
 const favoritesFilePath = path.join(__dirname, '../data/favorites.txt');
-createFolderAndFiles(favoritesFilePath);
 
 const addFavoriteMovie = (req, res) => {
   const user = req.user;
@@ -12,6 +12,9 @@ const addFavoriteMovie = (req, res) => {
 
   if (emptyFields(req.body, requiredFields)) {
     return res.status(400).json({ message: 'Faltan datos obligatorios.' });
+  }
+  if (!userExistsInFile(userId)) {
+    return res.status(400).json({ message: 'Usuario no encontrado.' });
   }
 
   let users = getUsers();
@@ -41,18 +44,20 @@ const getFavoriteMovies = (req, res) => {
   res.json(userFavorites);
 }
 
-function createFolderAndFiles(filePath) {
-  const folderPath = path.dirname(filePath);
-  if (!fs.existsSync(folderPath)) {
-    fs.mkdirSync(folderPath, { recursive: true });
-  }
-  if (!fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, '', 'utf-8');
-  }
-}
-
 function emptyFields(data, fields) {
   return fields.some(field => !data[field]);
+}
+
+function userExistsInFile(userId) {
+  try {
+    const usersData = fs.readFileSync(usersFilePath, 'utf-8');
+    const users = JSON.parse(usersData);
+    if (users.find(user => user.email === userId)) {
+      return true;
+    }
+  } catch (error) {
+  }
+  return false;
 }
 
 function getUsers() {
@@ -63,6 +68,7 @@ function getUsers() {
     return {};
   }
 }
+
 
 function getUserFavorites(users, userId) {
   return users[userId] || { favorites: [] };

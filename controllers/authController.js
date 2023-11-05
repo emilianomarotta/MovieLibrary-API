@@ -5,9 +5,7 @@ const path = require('path');
 
 const usersFilePath = path.join(__dirname, '../data/users.txt');
 const invalidTokensFilePath = path.join(__dirname, '../data/invalidTokens.txt');
-if (!fs.existsSync(invalidTokensFilePath)) {
-    fs.writeFileSync(invalidTokensFilePath, '[]', 'utf-8');
-}
+
 const secretKey = 'mySecretKey';
 
 const authenticateUser = (req, res) => {
@@ -39,18 +37,20 @@ const logout = (req, res) => {
     if (!token) {
         return res.status(401).json({ message: 'No se recibió token para invalidar.' });
     }
+    try {
+        const invalidTokens = getInvalidTokens();
+        if (invalidTokens.includes(token)) {
+            return res.status(401).json({ message: 'Token ya se encuentra en la lista de tokens inválidos.' });
+        }
+        invalidTokens.push(token);
+        saveInvalidTokens(invalidTokens);
 
-    const invalidTokens = getInvalidTokens();
-
-    if (invalidTokens.includes(token)) {
-        return res.status(401).json({ message: 'Token ya se encuentra en la lista de tokens inválidos.' });
+        res.status(200).json({ message: 'Token invalidado con éxito.' });
+    } catch (error) {
+        console.error('Error al leer el archivo de usuarios:', error);
+        res.status(500).json({ message: 'Error en el servidor.' });
     }
-    invalidTokens.push(token);
-    saveInvalidTokens(invalidTokens);
-
-    res.status(200).json({ message: 'Token invalidado con éxito.' });
 };
-
 
 function getUser(users, email) {
     return users.find(user => user.email.toLowerCase() === email.toLowerCase());
@@ -65,8 +65,12 @@ function generateToken(user) {
 }
 
 function getInvalidTokens() {
-    const fileContent = fs.readFileSync(invalidTokensFilePath, 'utf-8');
-    return JSON.parse(fileContent);
+    try {
+        const fileContent = fs.readFileSync(invalidTokensFilePath, 'utf-8');
+        return JSON.parse(fileContent);
+      } catch (error) {
+        return [];
+      }
 }
 
 function saveInvalidTokens(tokens) {
