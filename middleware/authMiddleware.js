@@ -1,9 +1,9 @@
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const secretKey = process.env.SECRET_KEY;
 const invalidTokensFilePath = path.join(__dirname, '../data/invalidTokens.txt');
-
-const secretKey = 'mySecretKey';
 
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization;
