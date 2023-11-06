@@ -197,7 +197,6 @@ describe('User Controller', () => {
         field2: 'Otro valor no vacío',
       };
       const fields = ['field1', 'field2'];
-
       expect(emptyFields(data, fields)).toBe(false);
     });
 
@@ -210,8 +209,25 @@ describe('User Controller', () => {
       expect(emptyFields(data, fields)).toBe(false);
     });
 
+    describe('getUsers', () => {
+      test('debería retornar una lista de usuarios', () => {
+        const newUser = {
+          email: 'test@example.com', firstName: 'Test', lastName: 'User', password: 'Test123!'
+        }
+        addUser(newUser, usersFilePath);
+        const users = getUsers();
+        expect(users).toContainEqual(newUser);
+        expect(users.length).toBeGreaterThan(0);
+      });
+
+      test('debería retornar una lista vacía', () => {
+        jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
+          throw new Error('File not found');
+        });
+        const users = getUsers();
+        expect(users).toEqual([]);
+        expect(users).toHaveLength(0);
+      });
+    });
   });
-
-
-
 });
