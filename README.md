@@ -39,9 +39,6 @@ npm start
 
 La API estará disponible en http://localhost:3000.
 
-Uso
-Registrar usuario
-Registra un nuevo usuario en la API.
 
 ## Uso
 
